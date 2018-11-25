@@ -1,0 +1,212 @@
+/* Import the class java_cup.runtime.*  */
+import java_cup.runtime.*;
+   
+/* Parser code to change the way the parser reports errors (include
+   line and column number of the error). */
+parser code {:
+    
+    /* Change the method report_error so it will display the line and
+       column of where the error occurred in the input as well as the
+       reason for the error which is passed into the method in the
+       String 'message'. */
+    public void report_error(String message, Object info) {
+   
+        /* Create a StringBuilder called 'm' with the string 'Error' in it. */
+        StringBuilder m = new StringBuilder("Error");
+   
+        /* Check if the information passed to the method is the same
+           type as the type java_cup.runtime.Symbol. */
+        if (info instanceof java_cup.runtime.Symbol) {
+            /* Declare a java_cup.runtime.Symbol object 's' with the
+               information in the object info that is being typecasted
+               as a java_cup.runtime.Symbol object. */
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+   
+            /* Check if the line number in the input is greater or
+               equal to zero. */
+            if (s.left >= 0) {                
+                /* Add to the end of the StringBuilder error message
+                   the line number of the error in the input. */
+                m.append(" in line "+(s.left+1));   
+                /* Check if the column number in the input is greater
+                   or equal to zero. */
+                if (s.right >= 0)                    
+                    /* Add to the end of the StringBuilder error message
+                       the column number of the error in the input. */
+                    m.append(", column "+(s.right+1));
+            }
+        }
+   
+        /* Add to the end of the StringBuilder error message created in
+           this method the message that was passed into this method. */
+        m.append(" : "+message);
+   
+        /* Print the contents of the StringBuilder 'm', which contains
+           an error message, out on a line. */
+        System.err.println(m);
+    }
+   
+    /* Change the method report_fatal_error so when it reports a fatal
+       error it will display the line and column number of where the
+       fatal error occurred in the input as well as the reason for the
+       fatal error which is passed into the method in the object
+       'message' and then exit.*/
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        System.exit(1);
+    }
+:};
+   
+
+   
+/* ------------Declaration of Terminals and Non Terminals Section----------- */
+   
+/* Terminals (tokens returned by the scanner).  
+
+   Terminals that have no value are listed first and then terminals
+   that do have an value, in this case an string value, are listed on
+   the next line down. */
+   
+terminal           _boolean, _break, _class, _double,_else, _extends, _for, _if,
+				   _implements, _int, _interface, _new,_newarray, _null, _println, _readln,
+				   _return, _string, _void, _while,_plus, _minus,_uminus, _multiplication, _division,
+				   _mod, _less, _lessequal, _greater,_greaterequal, _equal, _notequal, _and,
+                   _or, _not, _assignop, _semicolon,_comma, _period, _leftparen, _rightparen,
+                   _leftbracket, _rightbracket, _leftbrace, _rightbrace;
+
+terminal Integer   _intconstant;
+terminal Double    _doubleconstant;
+terminal String    _stringconstant, _id;
+terminal Boolean   _booleanconstant;
+
+   
+// Non terminals used in the grammar section.  
+
+nonterminal        Program,P,Decl,VariableDecl,Variable,Type, FunctionDecl,
+                    Formals,Var,ClassDecl,Extends,Implement,Id,Field,InterfaceDecl,
+					Prototype,StmtBlock,D,Statement,Stmt,IfStmt,WhileStmt,ForStmt,
+					BreakStmt, ReturnStmt, PrintStmt, Expression, Expr, Lvalue,Call,
+					Actuals,Constant;
+    
+   
+
+/* -------------Precedence and Associatively of Terminals Section----------- */
+  
+  precedence nonassoc _assignop;
+  precedence left _or;
+  precedence left _and;
+  precedence nonassoc _equal,_notequal;
+  precedence nonassoc _less,_lessequal,_greater,_greaterequal; 
+  precedence left _plus,_minus; 
+  precedence left _multiplication, _division,_mod;
+  precedence right _not,_uminus; 
+  precedence left _leftbracket,_period;
+  precedence left _leftparen;
+  
+
+
+/* ----------------------------Grammar Section-------------------- */
+   
+// The grammar for our parser.
+      
+Program ::= Decl P;   
+P ::= Decl 
+	| ;//empty string
+Decl ::= VariableDecl 
+		| FunctionDecl 
+		| ClassDecl 
+		| InterfaceDecl;
+VariableDecl ::= Variable _semicolon;
+Variable ::= Type _id;
+Type ::= _int 
+		| _double 
+		| _boolean 
+		| _string 
+		| Type _leftbracket _rightbracket 
+		| _id;
+FunctionDecl ::= Type _id _leftparen Formals _rightparen StmtBlock 
+				| _void _id _leftparen Formals _rightparen StmtBlock;
+Formals ::= Var 
+			| ; //empty string
+Var ::= Variable _comma Var
+	  | Variable;
+ClassDecl ::= _class _id Extends Implement _leftbrace Field _rightbrace;
+Extends ::= _extends _id
+		  | ; //empty string 
+Implement ::= _implements _id
+			| _implements Id
+			| ;//empty string
+Id ::= _id _comma Id _id
+	|; //empty string
+Field ::= VariableDecl Field 
+		| FunctionDecl Field
+		|; //empty string
+InterfaceDecl ::= _interface _id _leftbrace Prototype _rightbrace
+				| _interface _id _leftbrace _rightbrace;
+Prototype ::= Type _id _leftparen Formals _rightparen _semicolon 
+			| _void _id _leftparen Formals _rightparen _semicolon;
+StmtBlock ::= _leftbrace D Statement _rightbrace;
+D ::= VariableDecl D
+   |; //empty string
+Statement ::= Stmt Statement
+		    | ;//empty string
+Stmt ::= Expr _semicolon
+	   | _semicolon 
+	   | IfStmt 
+	   | WhileStmt 
+	   | ForStmt 
+	   | BreakStmt 
+	   | ReturnStmt 
+	   | PrintStmt 
+	   | StmtBlock;
+IfStmt ::= _if _leftparen Expr _rightparen Stmt _else Stmt
+         | _if _leftparen Expr _rightparen Stmt;
+WhileStmt ::= _while _leftparen Expr _rightparen Stmt;
+ForStmt ::= _for _leftparen Expr _semicolon Expr _semicolon Expr _rightparen Stmt
+	      | _for _leftparen _semicolon Expr _semicolon Expr _rightparen Stmt
+          | _for _leftparen _semicolon Expr _semicolon _rightparen Stmt
+          | _for _leftparen Expr _semicolon Expr _semicolon _rightparen Stmt;
+BreakStmt ::= _break _semicolon;
+ReturnStmt ::= _return Expr _semicolon
+	         | _return _semicolon;
+PrintStmt ::= _println _leftparen Expr:e1 Expression:e2 _rightparen _semicolon
+			{: System.out.println(e1+ " " + e2);:}
+            ;
+Expression ::= _comma Expr Expression 
+			 | ; //empty string
+Expr ::= _id Lvalue _assignop Expr 
+	   | Constant:e {: RESULT = e ; :}
+	   | _id Lvalue 
+	   | Call 
+	   | _leftparen Expr:e _rightparen  
+	   | Expr:e1 _plus Expr:e2  {: RESULT= e1 + e2; :} 
+	   | Expr:e1 _minus Expr:e2 {: RESULT= e1 - e2; :}
+	   | Expr:e1 _multiplication Expr:e2 {: RESULT= e1 * e2; :} 
+	   | Expr:e1 _division Expr:e2 {: RESULT= e1 / e2; :} 
+	   | Expr:e1 _mod Expr:e2 {: RESULT= e1 % e2; :}
+	   | _minus Expr:e {: RESULT=-e; :}
+                        %prec _uminus	   
+	   | Expr:e1 _less Expr:e2 {: RESULT= e1 < e2; :}
+	   | Expr:e1 _lessequal Expr:e2  {: RESULT= e1 <= e2; :}
+	   | Expr:e1 _greater Expr:e2 {: RESULT= e1 > e2; :}
+	   | Expr:e1 _greaterequal Expr:e2 {: RESULT= e1 >= e2; :}
+	   | Expr:e1 _equal Expr:e2 {: RESULT= e1 == e2; :}
+	   | Expr:e1 _notequal Expr:e2 {: RESULT=e1 != e2; :}
+	   | Expr:e1 _and Expr:e2 {: RESULT= e1 && e2; :}
+	   | Expr:e1 _or Expr:e2  {: RESULT= e1 || e2; :}  
+	   | _not Expr:e {: RESULT= !e; :}
+	   | _readln _leftparen _rightparen 
+	   | _new _leftparen _id _rightparen 
+	   | _newarray _leftparen _intconstant _comma Type _rightparen;
+Lvalue ::= //empty string 
+		 | Lvalue _leftbracket Expr _rightbracket 
+	     | Lvalue _period _id;
+Call ::= _id _leftparen Actuals _rightparen 
+	   | _id _period _id _leftparen Actuals _rightparen;
+Actuals ::= Expr Expression
+	      | ; //empty string
+Constant ::= _intconstant 
+		   | _doubleconstant 
+		   | _stringconstant 
+	       | _booleanconstant 
+		   | _null;
