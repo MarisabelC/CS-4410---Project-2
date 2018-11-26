@@ -5,6 +5,8 @@ import java_cup.runtime.*;
    line and column number of the error). */
 parser code {:
     
+	public ArrayList<ArrayList> shiftReduce= new ArrayList<>();
+	
     /* Change the method report_error so it will display the line and
        column of where the error occurred in the input as well as the
        reason for the error which is passed into the method in the
@@ -55,6 +57,10 @@ parser code {:
         report_error(message, info);
         System.exit(1);
     }
+	
+	private addAction(String Action, value){
+	
+	}
 :};
    
 
@@ -67,17 +73,17 @@ parser code {:
    that do have an value, in this case an string value, are listed on
    the next line down. */
    
-terminal           _boolean, _break, _class, _double,_else, _extends, _for, _if,
-				   _implements, _int, _interface, _new,_newarray, _null, _println, _readln,
-				   _return, _string, _void, _while,_plus, _minus,_uminus, _multiplication, _division,
-				   _mod, _less, _lessequal, _greater,_greaterequal, _equal, _notequal, _and,
-                   _or, _not, _assignop, _semicolon,_comma, _period, _leftparen, _rightparen,
-                   _leftbracket, _rightbracket, _leftbrace, _rightbrace;
+terminal           _break, _class,_else, _extends, _for, _if,_implements,_interface;
+terminal 		   _new,_newarray, _null, _println, _readln,_return,_void, _while;
+terminal 		   _plus, _minus,_uminus, _multiplication, _division,_mod, _less, _lessequal;
+terminal 		   _greater,_greaterequal, _equal, _notequal, _and,_or, _not, _assignop;
+terminal 		   _semicolon,_comma, _period, _leftparen, _rightparen;
+terminal           _leftbracket, _rightbracket, _leftbrace, _rightbrace;
 
-terminal Integer   _intconstant;
-terminal Double    _doubleconstant;
-terminal String    _stringconstant, _id;
-terminal Boolean   _booleanconstant;
+terminal Integer   _intconstant,_int;
+terminal Double    _doubleconstant, _double;
+terminal String    _stringconstant, _id, _string;
+terminal Boolean   _booleanconstant,_boolean;
 
    
 // Non terminals used in the grammar section.  
@@ -99,7 +105,7 @@ nonterminal        Program,P,Decl,VariableDecl,Variable,Type, FunctionDecl,
   precedence nonassoc _less,_lessequal,_greater,_greaterequal; 
   precedence left _plus,_minus; 
   precedence left _multiplication, _division,_mod;
-  precedence right _not,_uminus; 
+  precedence left _not,_uminus; 
   precedence left _leftbracket,_period;
   precedence left _leftparen;
   
@@ -108,9 +114,10 @@ nonterminal        Program,P,Decl,VariableDecl,Variable,Type, FunctionDecl,
 /* ----------------------------Grammar Section-------------------- */
    
 // The grammar for our parser.
+start with Program;
       
 Program ::= Decl P;   
-P ::= Decl 
+P ::= Decl P
 	| ;//empty string
 Decl ::= VariableDecl 
 		| FunctionDecl 
@@ -169,32 +176,30 @@ ForStmt ::= _for _leftparen Expr _semicolon Expr _semicolon Expr _rightparen Stm
 BreakStmt ::= _break _semicolon;
 ReturnStmt ::= _return Expr _semicolon
 	         | _return _semicolon;
-PrintStmt ::= _println _leftparen Expr:e1 Expression:e2 _rightparen _semicolon
-			{: System.out.println(e1+ " " + e2);:}
-            ;
+PrintStmt ::= _println _leftparen Expr Expression _rightparen _semicolon;
 Expression ::= _comma Expr Expression 
 			 | ; //empty string
 Expr ::= _id Lvalue _assignop Expr 
-	   | Constant:e {: RESULT = e ; :}
+	   | Constant 
 	   | _id Lvalue 
 	   | Call 
-	   | _leftparen Expr:e _rightparen  
-	   | Expr:e1 _plus Expr:e2  {: RESULT= e1 + e2; :} 
-	   | Expr:e1 _minus Expr:e2 {: RESULT= e1 - e2; :}
-	   | Expr:e1 _multiplication Expr:e2 {: RESULT= e1 * e2; :} 
-	   | Expr:e1 _division Expr:e2 {: RESULT= e1 / e2; :} 
-	   | Expr:e1 _mod Expr:e2 {: RESULT= e1 % e2; :}
-	   | _minus Expr:e {: RESULT=-e; :}
+	   | _leftparen Expr _rightparen  
+	   | Expr _plus Expr 
+	   | Expr _minus Expr
+	   | Expr _multiplication Expr
+	   | Expr _division Expr 
+	   | Expr _mod Expr 
+	   | _minus Expr
                         %prec _uminus	   
-	   | Expr:e1 _less Expr:e2 {: RESULT= e1 < e2; :}
-	   | Expr:e1 _lessequal Expr:e2  {: RESULT= e1 <= e2; :}
-	   | Expr:e1 _greater Expr:e2 {: RESULT= e1 > e2; :}
-	   | Expr:e1 _greaterequal Expr:e2 {: RESULT= e1 >= e2; :}
-	   | Expr:e1 _equal Expr:e2 {: RESULT= e1 == e2; :}
-	   | Expr:e1 _notequal Expr:e2 {: RESULT=e1 != e2; :}
-	   | Expr:e1 _and Expr:e2 {: RESULT= e1 && e2; :}
-	   | Expr:e1 _or Expr:e2  {: RESULT= e1 || e2; :}  
-	   | _not Expr:e {: RESULT= !e; :}
+	   | Expr _less Expr 
+	   | Expr _lessequal Expr  
+	   | Expr _greater Expr 
+	   | Expr _greaterequal Expr
+	   | Expr _equal Expr 
+	   | Expr _notequal Expr 
+	   | Expr _and Expr 
+	   | Expr _or Expr 
+	   | _not Expr
 	   | _readln _leftparen _rightparen 
 	   | _new _leftparen _id _rightparen 
 	   | _newarray _leftparen _intconstant _comma Type _rightparen;
