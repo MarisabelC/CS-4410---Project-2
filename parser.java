@@ -6,22 +6,57 @@
 import java_cup.runtime.*;
 import java_cup.runtime.XMLElement;
 import java.io.*;
+import java.nio.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
  */
 @SuppressWarnings({"rawtypes"})
 public class parser extends java_cup.runtime.lr_parser {
-
+	private List<String> allLines;
+	private StringTokenizer token;
+	private int preview;
+	private java_cup.runtime.Scanner lexer;
+	
 	public final Class getSymbolContainer() {
 		return sym.class;
 	}
-
+	
+	private void readFile(String fileName) {
+		Path path = Paths.get(fileName);
+		try {
+			byte[] bytes = Files.readAllBytes(path);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			allLines = Files.readAllLines(path, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
 	/** Default constructor. */
 	@Deprecated
 	public parser() {super();}
 
 	/** Constructor which sets the default scanner. */
 	@Deprecated
-	public parser(java_cup.runtime.Scanner s) {super(s);}
+	public parser(java_cup.runtime.Scanner s,String fileName) {
+		super(s);
+		lexer=s;
+		
+		
+	}
 
 	/** Constructor which sets the default scanner. */
 	public parser(java_cup.runtime.Scanner s, java_cup.runtime.SymbolFactory sf) {super(s,sf);}
@@ -589,6 +624,7 @@ public class parser extends java_cup.runtime.lr_parser {
 	protected void init_actions()
 	{
 		action_obj = new CUP$parser$actions(this);
+		preview=0;
 	}
 
 	/** Invoke a user supplied parse action. */
@@ -600,6 +636,7 @@ public class parser extends java_cup.runtime.lr_parser {
 					throws java.lang.Exception
 	{
 		/* call code in generated class */
+
 		return action_obj.CUP$parser$do_action(act_num, parser, stack, top);
 	}
 
@@ -622,7 +659,7 @@ public class parser extends java_cup.runtime.lr_parser {
        reason for the error which is passed into the method in the
        String 'message'. */
 	public void report_error(String message, Object info) {
-
+		System.out.println("****here***" + info.toString());
 		/* Create a StringBuilder called 'm' with the string 'Error' in it. */
 		StringBuilder m = new StringBuilder("Error");
 
@@ -683,6 +720,7 @@ public class parser extends java_cup.runtime.lr_parser {
 			this.parser = parser;
 		}
 
+		
 		/** Method 0 with the actual generated action code for actions 0 to 300. */
 		public final java_cup.runtime.Symbol CUP$parser$do_action_part00000000(
 				int                        CUP$parser$act_num,
@@ -694,7 +732,15 @@ public class parser extends java_cup.runtime.lr_parser {
 			/* Symbol object for return from actions */
 			java_cup.runtime.Symbol CUP$parser$result;
 
+			for (int i=preview;i< CUP$parser$stack.size();i++) {
+				System.out.println("[shift]");
+			
+			}
+			preview= CUP$parser$stack.size();
 			/* select the action based on the action number */
+			if (CUP$parser$act_num>0)
+				System.out.print(" [reduce "+CUP$parser$act_num+"]");
+			
 			switch (CUP$parser$act_num)
 			{
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -708,7 +754,7 @@ public class parser extends java_cup.runtime.lr_parser {
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("$START",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
 			/* ACCEPT */
-			System.out.println("Accept");  
+			System.out.println("\n[Accept]");  
 			CUP$parser$parser.done_parsing();
 			return CUP$parser$result;
 
@@ -719,7 +765,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Program",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			System.out.println("reduce 1");
+			//System.out.println("reduce 1");
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -729,7 +775,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("P",1, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			System.out.println("reduce 2");
+			//System.out.println("reduce 2");
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -739,7 +785,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("P",1, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			System.out.println("reduce 3");
+			//System.out.println("reduce 3");
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -749,7 +795,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Decl",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			System.out.println("reduce 4");
+			//System.out.println("reduce 4");
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -759,7 +805,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Decl",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			System.out.println("reduce 5");
+			//System.out.println("reduce 5");
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -769,7 +815,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Decl",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			System.out.println("reduce 6");
+			//System.out.println("reduce 6");
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -779,7 +825,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Decl",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			System.out.println("reduce 7");
+			//System.out.println("reduce 7");
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -789,7 +835,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("VariableDecl",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			System.out.println("reduce 8");
+			//System.out.println("reduce 8");
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -799,7 +845,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Variable",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			System.out.println("reduce 9");
+			//System.out.println("reduce 9");
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -809,7 +855,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Type",5, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			System.out.println("reduce 10");
+			//System.out.println("reduce 10");
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -1610,6 +1656,7 @@ public class parser extends java_cup.runtime.lr_parser {
 						"Invalid action number "+CUP$parser$act_num+"found in internal parse table");
 
 			}
+			
 		} /* end of method */
 
 		/** Method splitting the generated action code into several parts. */
@@ -1620,6 +1667,7 @@ public class parser extends java_cup.runtime.lr_parser {
 				int                        CUP$parser$top)
 						throws java.lang.Exception
 		{
+
 			return CUP$parser$do_action_part00000000(
 					CUP$parser$act_num,
 					CUP$parser$parser,

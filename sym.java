@@ -6,71 +6,68 @@
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int _new = 13;
-  public static final int _plus = 22;
-  public static final int _assignop = 37;
-  public static final int _mod = 27;
-  public static final int _println = 16;
-  public static final int _greater = 30;
-  public static final int _return = 18;
-  public static final int _leftbrace = 45;
-  public static final int _minus = 23;
-  public static final int _null = 15;
-  public static final int _rightbracket = 44;
-  public static final int _readln = 17;
-  public static final int _void = 20;
-  public static final int _comma = 39;
-  public static final int _class = 4;
-  public static final int _multiplication = 25;
-  public static final int _else = 6;
-  public static final int _division = 26;
-  public static final int _boolean = 2;
-  public static final int _equal = 32;
-  public static final int _rightbrace = 46;
-  public static final int _leftbracket = 43;
+  public static final int _new = 10;
+  public static final int _plus = 18;
+  public static final int _assignop = 33;
+  public static final int _mod = 23;
+  public static final int _println = 13;
+  public static final int _greater = 26;
+  public static final int _return = 15;
+  public static final int _leftbrace = 41;
+  public static final int _minus = 19;
+  public static final int _null = 12;
+  public static final int _rightbracket = 40;
+  public static final int _readln = 14;
+  public static final int _void = 16;
+  public static final int _comma = 35;
+  public static final int _class = 3;
+  public static final int _multiplication = 21;
+  public static final int _else = 4;
+  public static final int _division = 22;
+  public static final int _boolean = 51;
+  public static final int _equal = 28;
+  public static final int _rightbrace = 42;
+  public static final int _leftbracket = 39;
+  public static final int _string = 49;
   public static final int EOF = 0;
-  public static final int _string = 19;
   public static final int error = 1;
-  public static final int _break = 3;
-  public static final int _interface = 12;
-  public static final int _or = 35;
-  public static final int _leftparen = 41;
-  public static final int _notequal = 33;
-  public static final int _semicolon = 38;
-  public static final int _if = 9;
-  public static final int _id = 50;
-  public static final int _while = 21;
-  public static final int _lessequal = 29;
-  public static final int _doubleconstant = 48;
-  public static final int _int = 11;
-  public static final int _implements = 10;
-  public static final int _greaterequal = 31;
-  public static final int _period = 40;
-  public static final int _uminus = 24;
-  public static final int _extends = 7;
-  public static final int _for = 8;
-  public static final int _not = 36;
-  public static final int _and = 34;
-  public static final int _double = 5;
-  public static final int _newarray = 14;
-  public static final int _stringconstant = 49;
-  public static final int _intconstant = 47;
-  public static final int _booleanconstant = 51;
-  public static final int _less = 28;
-  public static final int _rightparen = 42;
+  public static final int _break = 2;
+  public static final int _interface = 9;
+  public static final int _or = 31;
+  public static final int _leftparen = 37;
+  public static final int _notequal = 29;
+  public static final int _semicolon = 34;
+  public static final int _if = 7;
+  public static final int _id = 48;
+  public static final int _while = 17;
+  public static final int _lessequal = 25;
+  public static final int _doubleconstant = 45;
+  public static final int _int = 44;
+  public static final int _implements = 8;
+  public static final int _greaterequal = 27;
+  public static final int _period = 36;
+  public static final int _uminus = 20;
+  public static final int _extends = 5;
+  public static final int _for = 6;
+  public static final int _not = 32;
+  public static final int _and = 30;
+  public static final int _double = 46;
+  public static final int _newarray = 11;
+  public static final int _stringconstant = 47;
+  public static final int _intconstant = 43;
+  public static final int _booleanconstant = 50;
+  public static final int _less = 24;
+  public static final int _rightparen = 38;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
-  "_boolean",
   "_break",
   "_class",
-  "_double",
   "_else",
   "_extends",
   "_for",
   "_if",
   "_implements",
-  "_int",
   "_interface",
   "_new",
   "_newarray",
@@ -78,7 +75,6 @@ public class sym {
   "_println",
   "_readln",
   "_return",
-  "_string",
   "_void",
   "_while",
   "_plus",
@@ -107,10 +103,14 @@ public class sym {
   "_leftbrace",
   "_rightbrace",
   "_intconstant",
+  "_int",
   "_doubleconstant",
+  "_double",
   "_stringconstant",
   "_id",
-  "_booleanconstant"
+  "_string",
+  "_booleanconstant",
+  "_boolean"
   };
 }
 

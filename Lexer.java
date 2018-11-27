@@ -536,13 +536,14 @@ class Lexer implements java_cup.runtime.Scanner {
 	 * when the end of file is reached
 	 */
 	private void zzDoEOF() throws java.io.IOException {
-		System.out.println(fileName);
+
 		if (!zzEOFDone) {
 			zzEOFDone = true;
 			try {
 				FileWriter fileWriter = new FileWriter(fileName);
 				BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 				boolean _newline = true;
+				System.out.println("\n");
 				for (int i = 0; i < tokens.size(); i++) {
 					if (!_newline) {
 						System.out.print(" ");
@@ -565,9 +566,9 @@ class Lexer implements java_cup.runtime.Scanner {
 
 				System.out.println("");
 
-				trie.printTable();
-			}
 
+			}
+			//trie.printTable();
 			yyclose();
 		}
 	}
@@ -719,355 +720,357 @@ class Lexer implements java_cup.runtime.Scanner {
 				{ return new java_cup.runtime.Symbol(sym.EOF); }
 			}
 			else {
+				if (!yytext().equals(" ") && !yytext().equals("\n") && !yytext().equals("\t") )
+					System.out.print(yytext()+" ");
 				switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
 				case 1: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [250] { System.out.println(\"Illegal character: <\" + yytext() + \">\");"+ZZ_NL+"\tUtility.error(Utility.E_UNMATCHED); }");
-					{ System.out.println("Illegal character: <" + yytext() + ">");
-					Utility.error(Utility.E_UNMATCHED);
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [250] { //System.out.println(\"Illegal character: <\" + yytext() + \">\");"+ZZ_NL+"\tUtility.error(Utility.E_UNMATCHED); }");
+				{ System.out.println("Illegal character: <" + yytext() + ">");
+				Utility.error(Utility.E_UNMATCHED);
+				} 
+				// fall through
 				case 37: break;
 				case 2: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [168] { String t = yytext();"+ZZ_NL+"  \tif (t.equals(\"boolean\")) {"+ZZ_NL+"  \t\ttokens.add(\"boolean\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._boolean,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"break\")) {"+ZZ_NL+"\t\ttokens.add(\"break\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._break,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"class\")) {"+ZZ_NL+"\t\ttokens.add(\"class\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._class,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"double\")) {"+ZZ_NL+"\t\ttokens.add(\"double\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._double,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"else\")) {"+ZZ_NL+"\t\ttokens.add(\"else\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._else,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"extends\")) {"+ZZ_NL+"\t\ttokens.add(\"extends\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._extends,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"for\")) {"+ZZ_NL+"\t\ttokens.add(\"for\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._for,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"if\")) {"+ZZ_NL+"\t\ttokens.add(\"if\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._if,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"implements\")) {"+ZZ_NL+"\t\ttokens.add(\"implements\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._implements,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"int\")) {"+ZZ_NL+"\t\ttokens.add(\"int\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._int,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"interface\")) {"+ZZ_NL+"\t\ttokens.add(\"interface\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._interface,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"new\")) {"+ZZ_NL+"\t\ttokens.add(\"new\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._new,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"newarray\")) {"+ZZ_NL+"\t\ttokens.add(\"newarray\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._newarray,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"null\")) {"+ZZ_NL+"\t\ttokens.add(\"null\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._null,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"println\")) {"+ZZ_NL+"\t\ttokens.add(\"println\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._println,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"readln\")) {"+ZZ_NL+"\t\ttokens.add(\"readln\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._readln,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"return\")) {"+ZZ_NL+"\t\ttokens.add(\"return\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._return,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"string\")) {"+ZZ_NL+"\t\ttokens.add(\"string\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._string,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"void\")) {"+ZZ_NL+"\t\ttokens.add(\"void\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._void,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"while\")) {"+ZZ_NL+"\t\ttokens.add(\"while\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._while,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else {"+ZZ_NL+"  \t\ttokens.add(\"id\");"+ZZ_NL+"  \t\ttrie.addIdentifier(t);"+ZZ_NL+"  \t  \treturn (new Symbol(sym._id,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} }");
-					{ String t = yytext();
-					if (t.equals("boolean")) {
-						tokens.add("boolean");
-						return (new Symbol(sym._boolean,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("break")) {
-						tokens.add("break");
-						return (new Symbol(sym._break,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("class")) {
-						tokens.add("class");
-						return (new Symbol(sym._class,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("double")) {
-						tokens.add("double");
-						return (new Symbol(sym._double,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("else")) {
-						tokens.add("else");
-						return (new Symbol(sym._else,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("extends")) {
-						tokens.add("extends");
-						return (new Symbol(sym._extends,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("for")) {
-						tokens.add("for");
-						return (new Symbol(sym._for,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("if")) {
-						tokens.add("if");
-						return (new Symbol(sym._if,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("implements")) {
-						tokens.add("implements");
-						return (new Symbol(sym._implements,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("int")) {
-						tokens.add("int");
-						return (new Symbol(sym._int,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("interface")) {
-						tokens.add("interface");
-						return (new Symbol(sym._interface,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("new")) {
-						tokens.add("new");
-						return (new Symbol(sym._new,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("newarray")) {
-						tokens.add("newarray");
-						return (new Symbol(sym._newarray,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("null")) {
-						tokens.add("null");
-						return (new Symbol(sym._null,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("println")) {
-						tokens.add("println");
-						return (new Symbol(sym._println,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("readln")) {
-						tokens.add("readln");
-						return (new Symbol(sym._readln,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("return")) {
-						tokens.add("return");
-						return (new Symbol(sym._return,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("string")) {
-						tokens.add("string");
-						return (new Symbol(sym._string,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("void")) {
-						tokens.add("void");
-						return (new Symbol(sym._void,yychar,yychar + yytext().length(), yytext()));
-					} else if (t.equals("while")) {
-						tokens.add("while");
-						return (new Symbol(sym._while,yychar,yychar + yytext().length(), yytext()));
-					} else {
-						tokens.add("id");
-						trie.addIdentifier(t);
-						return (new Symbol(sym._id,yychar,yychar + yytext().length(), yytext()));
-					}
-					} 
-					// fall through
+					//System.out.printlnne: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [168] { String t = yytext();"+ZZ_NL+"  \tif (t.equals(\"boolean\")) {"+ZZ_NL+"  \t\ttokens.add(\"boolean\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._boolean,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"break\")) {"+ZZ_NL+"\t\ttokens.add(\"break\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._break,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"class\")) {"+ZZ_NL+"\t\ttokens.add(\"class\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._class,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"double\")) {"+ZZ_NL+"\t\ttokens.add(\"double\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._double,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"else\")) {"+ZZ_NL+"\t\ttokens.add(\"else\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._else,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"extends\")) {"+ZZ_NL+"\t\ttokens.add(\"extends\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._extends,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"for\")) {"+ZZ_NL+"\t\ttokens.add(\"for\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._for,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"if\")) {"+ZZ_NL+"\t\ttokens.add(\"if\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._if,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"implements\")) {"+ZZ_NL+"\t\ttokens.add(\"implements\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._implements,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"int\")) {"+ZZ_NL+"\t\ttokens.add(\"int\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._int,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"interface\")) {"+ZZ_NL+"\t\ttokens.add(\"interface\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._interface,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"new\")) {"+ZZ_NL+"\t\ttokens.add(\"new\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._new,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"newarray\")) {"+ZZ_NL+"\t\ttokens.add(\"newarray\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._newarray,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"null\")) {"+ZZ_NL+"\t\ttokens.add(\"null\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._null,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"println\")) {"+ZZ_NL+"\t\ttokens.add(\"println\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._println,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"readln\")) {"+ZZ_NL+"\t\ttokens.add(\"readln\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._readln,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"return\")) {"+ZZ_NL+"\t\ttokens.add(\"return\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._return,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"string\")) {"+ZZ_NL+"\t\ttokens.add(\"string\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._string,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"void\")) {"+ZZ_NL+"\t\ttokens.add(\"void\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._void,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else if (t.equals(\"while\")) {"+ZZ_NL+"\t\ttokens.add(\"while\");"+ZZ_NL+"  \t\treturn (new Symbol(sym._while,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} else {"+ZZ_NL+"  \t\ttokens.add(\"id\");"+ZZ_NL+"  \t\ttrie.addIdentifier(t);"+ZZ_NL+"  \t  \treturn (new Symbol(sym._id,yychar,yychar + yytext().length(), yytext()));"+ZZ_NL+"  \t} }");
+				{ String t = yytext();
+				if (t.equals("boolean")) {
+					tokens.add("boolean");
+					return (new Symbol(sym._boolean,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("break")) {
+					tokens.add("break");
+					return (new Symbol(sym._break,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("class")) {
+					tokens.add("class");
+					return (new Symbol(sym._class,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("double")) {
+					tokens.add("double");
+					return (new Symbol(sym._double,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("else")) {
+					tokens.add("else");
+					return (new Symbol(sym._else,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("extends")) {
+					tokens.add("extends");
+					return (new Symbol(sym._extends,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("for")) {
+					tokens.add("for");
+					return (new Symbol(sym._for,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("if")) {
+					tokens.add("if");
+					return (new Symbol(sym._if,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("implements")) {
+					tokens.add("implements");
+					return (new Symbol(sym._implements,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("int")) {
+					tokens.add("int");
+					return (new Symbol(sym._int,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("interface")) {
+					tokens.add("interface");
+					return (new Symbol(sym._interface,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("new")) {
+					tokens.add("new");
+					return (new Symbol(sym._new,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("newarray")) {
+					tokens.add("newarray");
+					return (new Symbol(sym._newarray,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("null")) {
+					tokens.add("null");
+					return (new Symbol(sym._null,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("println")) {
+					tokens.add("println");
+					return (new Symbol(sym._println,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("readln")) {
+					tokens.add("readln");
+					return (new Symbol(sym._readln,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("return")) {
+					tokens.add("return");
+					return (new Symbol(sym._return,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("string")) {
+					tokens.add("string");
+					return (new Symbol(sym._string,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("void")) {
+					tokens.add("void");
+					return (new Symbol(sym._void,yychar,yychar + yytext().length(), yytext()));
+				} else if (t.equals("while")) {
+					tokens.add("while");
+					return (new Symbol(sym._while,yychar,yychar + yytext().length(), yytext()));
+				} else {
+					tokens.add("id");
+					trie.addIdentifier(t);
+					return (new Symbol(sym._id,yychar,yychar + yytext().length(), yytext()));
+				}
+				} 
+				// fall through
 				case 38: break;
 				case 3: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [148] { tokens.add(\"intconstant\");"+ZZ_NL+"  \treturn (new Symbol(sym._intconstant,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("intconstant");
-					return (new Symbol(sym._intconstant,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [148] { tokens.add(\"intconstant\");"+ZZ_NL+"  \treturn (new Symbol(sym._intconstant,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("intconstant");
+				return (new Symbol(sym._intconstant,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 39: break;
 				case 4: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [131] {  }");
-					{ 
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [131] {  }");
+				{ 
+				} 
+				// fall through
 				case 40: break;
 				case 5: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [246] { tokens.add(\"\\n\"); }");
-					{ tokens.add("\n");
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [246] { tokens.add(\"\\n\"); }");
+				{ tokens.add("\n");
+				} 
+				// fall through
 				case 41: break;
 				case 6: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [142] { String str =  yytext().substring(1,yytext().length());"+ZZ_NL+"    Utility.error(Utility.E_UNCLOSEDSTR);"+ZZ_NL+"    return (new Symbol(sym.error,str,yyline,yychar,yychar + str.length())); }");
-					{ String str =  yytext().substring(1,yytext().length());
-					Utility.error(Utility.E_UNCLOSEDSTR);
-					return (new Symbol(sym.error,yychar,yychar + str.length(), str));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [142] { String str =  yytext().substring(1,yytext().length());"+ZZ_NL+"    Utility.error(Utility.E_UNCLOSEDSTR);"+ZZ_NL+"    return (new Symbol(sym.error,str,yyline,yychar,yychar + str.length())); }");
+				{ String str =  yytext().substring(1,yytext().length());
+				Utility.error(Utility.E_UNCLOSEDSTR);
+				return (new Symbol(sym.error,yychar,yychar + str.length(), str));
+				} 
+				// fall through
 				case 42: break;
 				case 7: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [87] { tokens.add(\"division\"); "+ZZ_NL+"  \treturn (new Symbol(sym._division,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("division"); 
-					return (new Symbol(sym._division,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [87] { tokens.add(\"division\"); "+ZZ_NL+"  \treturn (new Symbol(sym._division,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("division"); 
+				return (new Symbol(sym._division,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 43: break;
 				case 8: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [85] { tokens.add(\"multiplication\"); "+ZZ_NL+"  \treturn (new Symbol(sym._multiplication,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("multiplication"); 
-					return (new Symbol(sym._multiplication,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [85] { tokens.add(\"multiplication\"); "+ZZ_NL+"  \treturn (new Symbol(sym._multiplication,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("multiplication"); 
+				return (new Symbol(sym._multiplication,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 44: break;
 				case 9: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [115] { tokens.add(\"period\");"+ZZ_NL+"  \treturn (new Symbol(sym._period,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("period");
-					return (new Symbol(sym._period,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [115] { tokens.add(\"period\");"+ZZ_NL+"  \treturn (new Symbol(sym._period,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("period");
+				return (new Symbol(sym._period,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 45: break;
 				case 10: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [83] { tokens.add(\"minus\");"+ZZ_NL+"  \treturn (new Symbol(sym._minus,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("minus");
-					return (new Symbol(sym._minus,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [83] { tokens.add(\"minus\");"+ZZ_NL+"  \treturn (new Symbol(sym._minus,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("minus");
+				return (new Symbol(sym._minus,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 46: break;
 				case 11: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [81] { tokens.add(\"plus\");"+ZZ_NL+"  \treturn (new Symbol(sym._plus,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("plus");
-					return (new Symbol(sym._plus,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [81] { tokens.add(\"plus\");"+ZZ_NL+"  \treturn (new Symbol(sym._plus,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("plus");
+				return (new Symbol(sym._plus,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 47: break;
 				case 12: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [89] { tokens.add(\"mod\"); "+ZZ_NL+"  \treturn (new Symbol(sym._mod,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("mod"); 
-					return (new Symbol(sym._mod,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [89] { tokens.add(\"mod\"); "+ZZ_NL+"  \treturn (new Symbol(sym._mod,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("mod"); 
+				return (new Symbol(sym._mod,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 48: break;
 				case 13: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [91] { tokens.add(\"less\");"+ZZ_NL+"  \treturn (new Symbol(sym._less,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("less");
-					return (new Symbol(sym._less,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [91] { tokens.add(\"less\");"+ZZ_NL+"  \treturn (new Symbol(sym._less,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("less");
+				return (new Symbol(sym._less,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 49: break;
 				case 14: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [109] { tokens.add(\"assignop\");"+ZZ_NL+"  \treturn (new Symbol(sym._assignop,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("assignop");
-					return (new Symbol(sym._assignop,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [109] { tokens.add(\"assignop\");"+ZZ_NL+"  \treturn (new Symbol(sym._assignop,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("assignop");
+				return (new Symbol(sym._assignop,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 50: break;
 				case 15: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [95] { tokens.add(\"greater\");"+ZZ_NL+"  \treturn (new Symbol(sym._greater,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("greater");
-					return (new Symbol(sym._greater,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [95] { tokens.add(\"greater\");"+ZZ_NL+"  \treturn (new Symbol(sym._greater,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("greater");
+				return (new Symbol(sym._greater,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 51: break;
 				case 16: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [107] { tokens.add(\"not\");"+ZZ_NL+"  \treturn (new Symbol(sym._not,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("not");
-					return (new Symbol(sym._not,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [107] { tokens.add(\"not\");"+ZZ_NL+"  \treturn (new Symbol(sym._not,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("not");
+				return (new Symbol(sym._not,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 52: break;
 				case 17: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [111] { tokens.add(\"semicolon\");"+ZZ_NL+"  \treturn (new Symbol(sym._semicolon,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("semicolon");
-					return (new Symbol(sym._semicolon,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [111] { tokens.add(\"semicolon\");"+ZZ_NL+"  \treturn (new Symbol(sym._semicolon,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("semicolon");
+				return (new Symbol(sym._semicolon,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 53: break;
 				case 18: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [113] { tokens.add(\"comma\");"+ZZ_NL+"  \treturn (new Symbol(sym._comma,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("comma");
-					return (new Symbol(sym._comma,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [113] { tokens.add(\"comma\");"+ZZ_NL+"  \treturn (new Symbol(sym._comma,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("comma");
+				return (new Symbol(sym._comma,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 54: break;
 				case 19: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [117] { tokens.add(\"leftparen\");"+ZZ_NL+"  \treturn (new Symbol(sym._leftparen,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("leftparen");
-					return (new Symbol(sym._leftparen,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [117] { tokens.add(\"leftparen\");"+ZZ_NL+"  \treturn (new Symbol(sym._leftparen,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("leftparen");
+				return (new Symbol(sym._leftparen,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 55: break;
 				case 20: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [119] { tokens.add(\"rightparen\");"+ZZ_NL+"  \treturn (new Symbol(sym._rightparen,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("rightparen");
-					return (new Symbol(sym._rightparen,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [119] { tokens.add(\"rightparen\");"+ZZ_NL+"  \treturn (new Symbol(sym._rightparen,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("rightparen");
+				return (new Symbol(sym._rightparen,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 56: break;
 				case 21: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [121] { tokens.add(\"leftbracket\");"+ZZ_NL+"  \treturn (new Symbol(sym._leftbracket,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("leftbracket");
-					return (new Symbol(sym._leftbracket,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [121] { tokens.add(\"leftbracket\");"+ZZ_NL+"  \treturn (new Symbol(sym._leftbracket,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("leftbracket");
+				return (new Symbol(sym._leftbracket,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 57: break;
 				case 22: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [123] { tokens.add(\"rightbracket\");"+ZZ_NL+"  \treturn (new Symbol(sym.rightbracket,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("rightbracket");
-					return (new Symbol(sym._rightbracket,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [123] { tokens.add(\"rightbracket\");"+ZZ_NL+"  \treturn (new Symbol(sym.rightbracket,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("rightbracket");
+				return (new Symbol(sym._rightbracket,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 58: break;
 				case 23: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [125] { tokens.add(\"leftbrace\");"+ZZ_NL+"  \treturn (new Symbol(sym._leftbrace,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("leftbrace");
-					return (new Symbol(sym._leftbrace,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [125] { tokens.add(\"leftbrace\");"+ZZ_NL+"  \treturn (new Symbol(sym._leftbrace,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("leftbrace");
+				return (new Symbol(sym._leftbrace,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 59: break;
 				case 24: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [127] { tokens.add(\"rightbrace\");"+ZZ_NL+"  \treturn (new Symbol(sym._rightbrace,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("rightbrace");
-					return (new Symbol(sym._rightbrace,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [127] { tokens.add(\"rightbrace\");"+ZZ_NL+"  \treturn (new Symbol(sym._rightbrace,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("rightbrace");
+				return (new Symbol(sym._rightbrace,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 60: break;
 				case 25: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [158] { tokens.add(\"doubleconstant\");"+ZZ_NL+"  \treturn (new Symbol(sym._doubleconstant,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("doubleconstant");
-					return (new Symbol(sym._doubleconstant,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [158] { tokens.add(\"doubleconstant\");"+ZZ_NL+"  \treturn (new Symbol(sym._doubleconstant,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("doubleconstant");
+				return (new Symbol(sym._doubleconstant,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 61: break;
 				case 26: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [136] { tokens.add(\"stringconstant\");"+ZZ_NL+"    String str =  yytext().substring(1,yylength()-1);"+ZZ_NL+"    return (new Symbol(sym._stringconstant,str,yyline,yychar,yychar+yylength())); }");
-					{ tokens.add("stringconstant");
-					String str =  yytext().substring(1,yylength()-1);
-					return (new Symbol(sym._stringconstant,yychar,yychar + str.length(), str));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [136] { tokens.add(\"stringconstant\");"+ZZ_NL+"    String str =  yytext().substring(1,yylength()-1);"+ZZ_NL+"    return (new Symbol(sym._stringconstant,str,yyline,yychar,yychar+yylength())); }");
+				{ tokens.add("stringconstant");
+				String str =  yytext().substring(1,yylength()-1);
+				return (new Symbol(sym._stringconstant,yychar,yychar + str.length(), str));
+				} 
+				// fall through
 				case 62: break;
 				case 27: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [133] { yybegin(COMMENT); comment_count++; }");
-					{ yybegin(COMMENT); comment_count++;
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [133] { yybegin(COMMENT); comment_count++; }");
+				{ yybegin(COMMENT); comment_count++;
+				} 
+				// fall through
 				case 63: break;
 				case 28: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [93] { tokens.add(\"lessequal\");"+ZZ_NL+"  \treturn (new Symbol(sym._lessequal,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("lessequal");
-					return (new Symbol(sym._lessequal,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [93] { tokens.add(\"lessequal\");"+ZZ_NL+"  \treturn (new Symbol(sym._lessequal,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("lessequal");
+				return (new Symbol(sym._lessequal,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 64: break;
 				case 29: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [99] { tokens.add(\"equal\");"+ZZ_NL+"  \treturn (new Symbol(sym._equal,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("equal");
-					return (new Symbol(sym._equal,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [99] { tokens.add(\"equal\");"+ZZ_NL+"  \treturn (new Symbol(sym._equal,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("equal");
+				return (new Symbol(sym._equal,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 65: break;
 				case 30: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [97] { tokens.add(\"greaterequal\");"+ZZ_NL+"  \treturn (new Symbol(sym._greaterequal,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("greaterequal");
-					return (new Symbol(sym._greaterequal,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [97] { tokens.add(\"greaterequal\");"+ZZ_NL+"  \treturn (new Symbol(sym._greaterequal,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("greaterequal");
+				return (new Symbol(sym._greaterequal,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 66: break;
 				case 31: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [101] { tokens.add(\"notequal\");"+ZZ_NL+"  \treturn (new Symbol(sym._notequal,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("notequal");
-					return (new Symbol(sym._notequal,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [101] { tokens.add(\"notequal\");"+ZZ_NL+"  \treturn (new Symbol(sym._notequal,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("notequal");
+				return (new Symbol(sym._notequal,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 67: break;
 				case 32: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [103] { tokens.add(\"and\");"+ZZ_NL+"  \treturn (new Symbol(sym._and,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("and");
-					return (new Symbol(sym._and,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [103] { tokens.add(\"and\");"+ZZ_NL+"  \treturn (new Symbol(sym._and,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("and");
+				return (new Symbol(sym._and,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 68: break;
 				case 33: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [105] { tokens.add(\"or\");"+ZZ_NL+"  \treturn (new Symbol(sym._or,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("or");
-					return (new Symbol(sym._or,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [105] { tokens.add(\"or\");"+ZZ_NL+"  \treturn (new Symbol(sym._or,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("or");
+				return (new Symbol(sym._or,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 69: break;
 				case 34: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [240] { comment_count++; }");
-					{ comment_count++;
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [240] { comment_count++; }");
+				{ comment_count++;
+				} 
+				// fall through
 				case 70: break;
 				case 35: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [241] { if (--comment_count == 0) yybegin(YYINITIAL); }");
-					{ if (--comment_count == 0) yybegin(YYINITIAL);
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [241] { if (--comment_count == 0) yybegin(YYINITIAL); }");
+				{ if (--comment_count == 0) yybegin(YYINITIAL);
+				} 
+				// fall through
 				case 71: break;
 				case 36: 
-					System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
-					System.out.println("action [163] { tokens.add(\"booleanconstant\");"+ZZ_NL+"  \treturn (new Symbol(sym._booleanconstant,yychar,yychar + yytext().length(), yytext())); }");
-					{ tokens.add("booleanconstant");
-					return (new Symbol(sym._booleanconstant,yychar,yychar + yytext().length(), yytext()));
-					} 
-					// fall through
+					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
+					//System.out.println("action [163] { tokens.add(\"booleanconstant\");"+ZZ_NL+"  \treturn (new Symbol(sym._booleanconstant,yychar,yychar + yytext().length(), yytext())); }");
+				{ tokens.add("booleanconstant");
+				return (new Symbol(sym._booleanconstant,yychar,yychar + yytext().length(), yytext()));
+				} 
+				// fall through
 				case 72: break;
 				default:
 					zzScanError(ZZ_NO_MATCH);
@@ -1094,8 +1097,8 @@ class Lexer implements java_cup.runtime.Scanner {
 			fileName = argv[argv.length - 1];
 			fileName = fileName.substring(0, fileName.length() - 4);
 			fileName = fileName.concat("_out.txt");
-			
-			
+
+
 			int firstFilePos = 0;
 			String encodingName = "UTF-8";
 			if (argv[0].equals("--encoding")) {
@@ -1115,7 +1118,8 @@ class Lexer implements java_cup.runtime.Scanner {
 					java.io.Reader reader = new java.io.InputStreamReader(stream, encodingName);
 					scanner = new Lexer(reader);
 					do {
-						System.out.println(scanner.next_token());
+						//System.out.println(scanner.next_token());
+						scanner.next_token();
 					} while (!scanner.zzAtEOF);
 
 				}
