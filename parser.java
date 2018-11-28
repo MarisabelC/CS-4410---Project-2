@@ -19,12 +19,12 @@ import java.util.StringTokenizer;
  */
 @SuppressWarnings({"rawtypes"})
 public class parser extends java_cup.runtime.lr_parser {
-	private int preview;
-	private Lexer lexer;
+
 	private boolean pop;
 	java_cup.runtime.Scanner currentLexer;
 	String token;
-	
+	ArrayList<String> tokenList;
+
 
 	public final Class getSymbolContainer() {
 		return sym.class;
@@ -38,10 +38,14 @@ public class parser extends java_cup.runtime.lr_parser {
 	@Deprecated
 	public parser(java_cup.runtime.Scanner s,String fileName){
 		super(s);
-		currentLexer=s;
 		
+		currentLexer=s;
+		tokenList= new ArrayList<>();
 		try {
-			lexer=new Lexer(new FileReader(fileName),fileName) ;
+			Lexer lexer=new Lexer(new FileReader(fileName),fileName) ;
+			do {
+				tokenList.add((String) lexer.next_token().value);
+			} while (!lexer.isZzAtEOF());
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -618,8 +622,8 @@ public class parser extends java_cup.runtime.lr_parser {
 	protected void init_actions()
 	{
 		action_obj = new CUP$parser$actions(this);
-		preview=0;
 		pop=true;
+		token= tokenList.get(0);
 	}
 
 	/** Invoke a user supplied parse action. */
@@ -696,15 +700,12 @@ public class parser extends java_cup.runtime.lr_parser {
        fatal error which is passed into the method in the object
        'message' and then exit.*/
 	public void report_fatal_error(String message, Object info) {
-		
+
 		try {
 			String next = (String) currentLexer.next_token().value;
-			String previous= (String) lexer.next_token().value;
-				
-			while (previous !=null && !previous.equals(next)) {
-				System.out.printf("%-30s",previous);
-			    previous= (String) lexer.next_token().value;
-				if (previous==null || previous.equals(next)) 
+			while (tokenList.size()!=1 && !tokenList.get(0).equals(next)) {
+				System.out.printf("%-30s",tokenList.remove(0));
+				if (tokenList.isEmpty() || tokenList.get(0).equals(next)) 
 					break;
 				System.out.println(" [shift]");		
 			}
@@ -731,7 +732,7 @@ public class parser extends java_cup.runtime.lr_parser {
 		CUP$parser$actions(parser parser) {
 			this.parser = parser;
 		}
-		
+
 
 		/** Method 0 with the actual generated action code for actions 0 to 300. */
 		public final java_cup.runtime.Symbol CUP$parser$do_action_part00000000(
@@ -743,26 +744,29 @@ public class parser extends java_cup.runtime.lr_parser {
 		{
 			/* Symbol object for return from actions */
 			java_cup.runtime.Symbol CUP$parser$result;
-			
-			String t="";
-			for (int i=preview;i< CUP$parser$stack.size() && parser.cur_token.value!=null;i++) {
+
+			while (tokenList.size()!=1 &&!token.equals(parser.cur_token.value)) {
+				
 				if (pop) {
-					System.out.printf("%-30s",lexer.next_token().value);
+					System.out.printf("%-30s",tokenList.remove(0));
 				}
-				System.out.println(" [shift]");
+				System.out.println(" [shift]");	
 				pop=true;
+				token=tokenList.get(0);
 			}
 
 			if (pop) {
-				token = (String)lexer.next_token().value;
-				if (token!=null)
+
+				if (tokenList.size()!=1 ) {
+					token=tokenList.remove(0);
 					System.out.printf("%-30s",token);
+					
+				}
 				else
-					System.out.printf("%-30s","empty");
+					System.out.printf("%-30s","empty string");
 				pop=false;
 			}
 
-			preview= CUP$parser$stack.size();
 			/* select the action based on the action number */
 			if (CUP$parser$act_num>0)
 				System.out.print(" [reduce "+CUP$parser$act_num+"]");

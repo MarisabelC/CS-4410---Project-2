@@ -114,7 +114,6 @@ nonterminal        Program,P,Decl,VariableDecl,Variable,Type, FunctionDecl,
 /* ----------------------------Grammar Section-------------------- */
    
 // The grammar for our parser.
-start with Program;
       
 Program ::= Decl P;   
 P ::= Decl P
@@ -152,8 +151,8 @@ InterfaceDecl ::= _interface _id _leftbrace Prototype _rightbrace
 				| _interface _id _leftbrace _rightbrace;
 Prototype ::= Type _id _leftparen Formals _rightparen _semicolon 
 			| _void _id _leftparen Formals _rightparen _semicolon;
-StmtBlock ::= _leftbrace D Statement _rightbrace;
-D ::= VariableDecl D
+StmtBlock ::= _leftbrace VarDecl Statement _rightbrace;
+VarDecl ::= VariableDecl VarDecl
    |; //empty string
 Statement ::= Stmt Statement
 		    | ;//empty string
