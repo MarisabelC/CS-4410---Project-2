@@ -702,7 +702,7 @@ public class parser extends java_cup.runtime.lr_parser {
 			String previous= (String) lexer.next_token().value;
 				
 			while (previous !=null && !previous.equals(next)) {
-				System.out.print(previous);
+				System.out.printf("%-30s",previous);
 			    previous= (String) lexer.next_token().value;
 				if (previous==null || previous.equals(next)) 
 					break;
@@ -713,7 +713,7 @@ public class parser extends java_cup.runtime.lr_parser {
 			e.printStackTrace();
 		} 
 		report_error(message, info);
-		System.out.println("\n[reject]");
+		System.out.println("[reject]");
 		System.exit(1);
 	}
 
@@ -747,19 +747,18 @@ public class parser extends java_cup.runtime.lr_parser {
 			String t="";
 			for (int i=preview;i< CUP$parser$stack.size() && parser.cur_token.value!=null;i++) {
 				if (pop) {
-					System.out.print(lexer.next_token().value);
+					System.out.printf("%-30s",lexer.next_token().value);
 				}
 				System.out.println(" [shift]");
 				pop=true;
 			}
 
-
 			if (pop) {
 				token = (String)lexer.next_token().value;
 				if (token!=null)
-					System.out.print(token);
+					System.out.printf("%-30s",token);
 				else
-					System.out.print("empty");
+					System.out.printf("%-30s","empty");
 				pop=false;
 			}
 
