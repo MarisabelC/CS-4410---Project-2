@@ -11,6 +11,7 @@ import java_cup.runtime.*;
  * from the specification file <tt>C:/Users/maris/Desktop/CS 4110/Project 2/spec.flex</tt>
  */
 class Lexer implements java_cup.runtime.Scanner {
+	
 
 	/** This character denotes the end of file */
 	public static final int YYEOF = -1;
@@ -293,11 +294,14 @@ class Lexer implements java_cup.runtime.Scanner {
 	 *
 	 * @param   in  the java.io.Reader to read input from.
 	 */
-	Lexer(java.io.Reader in) {
+	Lexer(java.io.Reader in,String fileName) {
 		for (int i=0;i<keywords.length;i++) {
 			trie.addKeyword(keywords[i]);
 		}	
 		this.zzReader = in;
+		this.fileName = fileName;
+		this.fileName = this.fileName.substring(0, fileName.length() - 4);
+		this.fileName = this.fileName.concat("_out.txt");
 	}
 
 
@@ -535,44 +539,43 @@ class Lexer implements java_cup.runtime.Scanner {
 	 * Contains user EOF-code, which will be executed exactly once,
 	 * when the end of file is reached
 	 */
-	private void zzDoEOF() throws java.io.IOException {
-
+	private void zzDoEOF() {
 		if (!zzEOFDone) {
 			zzEOFDone = true;
 			try {
-				FileWriter fileWriter = new FileWriter(fileName);
-				BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+				PrintStream o = new PrintStream(new File(fileName));
+				PrintStream console = System.out;
+				System.setOut(o);
+
 				boolean _newline = true;
-				System.out.println("\n");
 				for (int i = 0; i < tokens.size(); i++) {
 					if (!_newline) {
 						System.out.print(" ");
-						bufferedWriter.write(" ");
 					}
 					if (_newline && tokens.get(i).equals("\n")) {
 						continue;
 					}
 					System.out.print(tokens.get(i));
-					bufferedWriter.write(tokens.get(i));
 					if (tokens.get(i).equals("\n")) {
 						_newline = true;
 					} else {
 						_newline = false;
 					}
-				} 
+				}
+
+				System.out.println("");
+
+				//trie.printTable();
 			}
 			catch (IOException ex) {
 				System.out.println("Error writing to file " + fileName);
 
-				System.out.println("");
-
 
 			}
-			//trie.printTable();
-			yyclose();
+
+
 		}
 	}
-
 
 	/**
 	 * Resumes scanning until the next regular expression is matched,
@@ -716,7 +719,7 @@ class Lexer implements java_cup.runtime.Scanner {
 			zzMarkedPos = zzMarkedPosL;
 			if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
 				zzAtEOF = true;
-				//zzDoEOF();
+				zzDoEOF();
 				{ return new java_cup.runtime.Symbol(sym.EOF); }
 			}
 			else {
@@ -1094,11 +1097,7 @@ class Lexer implements java_cup.runtime.Scanner {
 			System.out.println("Usage : java Lexer [ --encoding <name> ] <inputfile(s)>");
 		}
 		else {
-			fileName = argv[argv.length - 1];
-			fileName = fileName.substring(0, fileName.length() - 4);
-			fileName = fileName.concat("_out.txt");
-
-
+			
 			int firstFilePos = 0;
 			String encodingName = "UTF-8";
 			if (argv[0].equals("--encoding")) {
@@ -1116,7 +1115,7 @@ class Lexer implements java_cup.runtime.Scanner {
 				try {
 					java.io.FileInputStream stream = new java.io.FileInputStream(argv[i]);
 					java.io.Reader reader = new java.io.InputStreamReader(stream, encodingName);
-					scanner = new Lexer(reader);
+					scanner = new Lexer(reader,argv[i]);
 					do {
 						//System.out.println(scanner.next_token());
 						scanner.next_token();

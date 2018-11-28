@@ -55,7 +55,6 @@ public class parser extends java_cup.runtime.lr_parser {
 		super(s);
 		lexer=s;
 		
-		
 	}
 
 	/** Constructor which sets the default scanner. */
@@ -659,7 +658,7 @@ public class parser extends java_cup.runtime.lr_parser {
        reason for the error which is passed into the method in the
        String 'message'. */
 	public void report_error(String message, Object info) {
-		System.out.println("****here***" + info.toString());
+	
 		/* Create a StringBuilder called 'm' with the string 'Error' in it. */
 		StringBuilder m = new StringBuilder("Error");
 
@@ -692,7 +691,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 		/* Print the contents of the StringBuilder 'm', which contains
            an error message, out on a line. */
-		System.err.println(m);
+		
 	}
 
 	/* Change the method report_fatal_error so when it reports a fatal
@@ -702,6 +701,7 @@ public class parser extends java_cup.runtime.lr_parser {
        'message' and then exit.*/
 	public void report_fatal_error(String message, Object info) {
 		report_error(message, info);
+		System.out.println("\n[reject]");
 		System.exit(1);
 	}
 
@@ -754,6 +754,7 @@ public class parser extends java_cup.runtime.lr_parser {
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("$START",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
 			/* ACCEPT */
+	
 			System.out.println("\n[Accept]");  
 			CUP$parser$parser.done_parsing();
 			return CUP$parser$result;
@@ -765,7 +766,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Program",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			//System.out.println("reduce 1");
+			
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -775,7 +776,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("P",1, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			//System.out.println("reduce 2");
+			
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -785,7 +786,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("P",1, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			//System.out.println("reduce 3");
+			
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -795,7 +796,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Decl",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			//System.out.println("reduce 4");
+		
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -805,7 +806,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Decl",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			//System.out.println("reduce 5");
+			
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -815,7 +816,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Decl",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			//System.out.println("reduce 6");
+			
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -825,7 +826,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Decl",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			//System.out.println("reduce 7");
+			
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -835,7 +836,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("VariableDecl",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			//System.out.println("reduce 8");
+			
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -845,7 +846,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Variable",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			//System.out.println("reduce 9");
+			
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -855,7 +856,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Type",5, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			//System.out.println("reduce 10");
+			
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
