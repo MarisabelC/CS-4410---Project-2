@@ -28,6 +28,7 @@ public class Main {
 		/* Start the parser */
 		try {
 			
+			@SuppressWarnings("deprecation")
 			parser p = new parser(new Lexer(new FileReader(argv[0]),argv[0]),argv[0]);
 			Object result = p.parse().value; 
 		} catch (Exception e) {

@@ -564,6 +564,7 @@ class Lexer implements java_cup.runtime.Scanner {
 						_newline = false;
 					}
 				} 
+				System.out.println("\n");
 			}
 			catch (IOException ex) {
 				System.out.println("Error writing to file " + fileName);
@@ -720,7 +721,7 @@ class Lexer implements java_cup.runtime.Scanner {
 			zzMarkedPos = zzMarkedPosL;
 			if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
 				setZzAtEOF(true);
-				//zzDoEOF();
+				zzDoEOF();
 				{ return new java_cup.runtime.Symbol(sym.EOF); }
 			}
 			else {

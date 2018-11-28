@@ -24,6 +24,8 @@ public class parser extends java_cup.runtime.lr_parser {
 	java_cup.runtime.Scanner currentLexer;
 	String token;
 	ArrayList<String> tokenList;
+	List<List<String>> reduceShift;
+	int currPos;
 
 
 	public final Class getSymbolContainer() {
@@ -38,14 +40,18 @@ public class parser extends java_cup.runtime.lr_parser {
 	@Deprecated
 	public parser(java_cup.runtime.Scanner s,String fileName){
 		super(s);
-		
 		currentLexer=s;
 		tokenList= new ArrayList<>();
+		reduceShift=new ArrayList<>();
+		currPos=0;
 		try {
 			Lexer lexer=new Lexer(new FileReader(fileName),fileName) ;
 			do {
 				tokenList.add((String) lexer.next_token().value);
+				reduceShift.add(new ArrayList<>());
 			} while (!lexer.isZzAtEOF());
+
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -704,16 +710,18 @@ public class parser extends java_cup.runtime.lr_parser {
 		try {
 			String next = (String) currentLexer.next_token().value;
 			while (tokenList.size()!=1 && !tokenList.get(0).equals(next)) {
-				System.out.printf("%-30s",tokenList.remove(0));
+				reduceShift.get(currPos).add(tokenList.remove(0));
 				if (tokenList.isEmpty() || tokenList.get(0).equals(next)) 
 					break;
-				System.out.println(" [shift]");		
+				reduceShift.get(currPos).add(" [shift]");
+				currPos++;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		report_error(message, info);
+		print();
 		System.out.println("[reject]");
 		System.exit(1);
 	}
@@ -722,6 +730,21 @@ public class parser extends java_cup.runtime.lr_parser {
 
 	}
 
+	private void print() {
+		int size=reduceShift.size();
+		for (int i=0;i<size;i++) {
+			List<String> list=reduceShift.remove(0);
+			for (int j=0; j<list.size();j++)
+				if (j==0)
+					System.out.printf("%-30s",list.get(j));
+				else {
+					if (list.get(j).equals(" [shift]"))
+						System.out.println(list.get(j));
+					else
+						System.out.print(list.get(j));
+				}
+		}
+	}
 
 	/** Cup generated class to encapsulate user supplied action code.*/
 	@SuppressWarnings({"rawtypes", "unchecked", "unused"})
@@ -745,31 +768,33 @@ public class parser extends java_cup.runtime.lr_parser {
 			/* Symbol object for return from actions */
 			java_cup.runtime.Symbol CUP$parser$result;
 
+
 			while (tokenList.size()!=1 &&!token.equals(parser.cur_token.value)) {
-				
+
 				if (pop) {
-					System.out.printf("%-30s",tokenList.remove(0));
+					reduceShift.get(currPos).add(tokenList.remove(0));
 				}
-				System.out.println(" [shift]");	
+				reduceShift.get(currPos).add(" [shift]");
 				pop=true;
 				token=tokenList.get(0);
+				currPos++;
 			}
 
 			if (pop) {
 
 				if (tokenList.size()!=1 ) {
 					token=tokenList.remove(0);
-					System.out.printf("%-30s",token);
-					
+					reduceShift.get(currPos).add(token);
 				}
 				else
-					System.out.printf("%-30s","empty string");
-				pop=false;
+					reduceShift.get(currPos).add("empty string");
+					pop=false;
 			}
 
 			/* select the action based on the action number */
 			if (CUP$parser$act_num>0)
-				System.out.print(" [reduce "+CUP$parser$act_num+"]");
+				reduceShift.get(currPos).add(" [reduce "+CUP$parser$act_num+"]");
+			//System.out.print(" [reduce "+CUP$parser$act_num+"]");
 
 			switch (CUP$parser$act_num)
 			{
@@ -784,7 +809,7 @@ public class parser extends java_cup.runtime.lr_parser {
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("$START",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
 			/* ACCEPT */
-
+			print();
 			System.out.println("\n[Accept]");  
 			CUP$parser$parser.done_parsing();
 			return CUP$parser$result;
