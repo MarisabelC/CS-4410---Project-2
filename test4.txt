@@ -1,0 +1,3 @@
+string main(string str){
+	front = in.nextLine();
+}

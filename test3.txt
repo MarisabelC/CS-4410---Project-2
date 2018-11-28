@@ -1,0 +1,3 @@
+double fun(int i; int j){
+result = 5.times(4);
+}

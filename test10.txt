@@ -1,0 +1,6 @@
+class something(){
+boolean b;
+userDefinedClassType f(){}
+double d;
+string g(){}
+}
