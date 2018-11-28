@@ -539,43 +539,44 @@ class Lexer implements java_cup.runtime.Scanner {
 	 * Contains user EOF-code, which will be executed exactly once,
 	 * when the end of file is reached
 	 */
-	private void zzDoEOF() {
+	private void zzDoEOF() throws java.io.IOException {
+
 		if (!zzEOFDone) {
 			zzEOFDone = true;
 			try {
-				PrintStream o = new PrintStream(new File(fileName));
-				PrintStream console = System.out;
-				System.setOut(o);
-
+				FileWriter fileWriter = new FileWriter(fileName);
+				BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 				boolean _newline = true;
+				System.out.println("\n");
 				for (int i = 0; i < tokens.size(); i++) {
 					if (!_newline) {
 						System.out.print(" ");
+						bufferedWriter.write(" ");
 					}
 					if (_newline && tokens.get(i).equals("\n")) {
 						continue;
 					}
 					System.out.print(tokens.get(i));
+					bufferedWriter.write(tokens.get(i));
 					if (tokens.get(i).equals("\n")) {
 						_newline = true;
 					} else {
 						_newline = false;
 					}
-				}
-
-				System.out.println("");
-
-				//trie.printTable();
+				} 
 			}
 			catch (IOException ex) {
 				System.out.println("Error writing to file " + fileName);
 
+				System.out.println("");
+
 
 			}
-
-
+			//trie.printTable();
+			yyclose();
 		}
 	}
+
 
 	/**
 	 * Resumes scanning until the next regular expression is matched,
@@ -1098,6 +1099,7 @@ class Lexer implements java_cup.runtime.Scanner {
 		}
 		else {
 			
+
 			int firstFilePos = 0;
 			String encodingName = "UTF-8";
 			if (argv[0].equals("--encoding")) {
