@@ -19,42 +19,37 @@ import java.util.StringTokenizer;
  */
 @SuppressWarnings({"rawtypes"})
 public class parser extends java_cup.runtime.lr_parser {
-	private List<String> allLines;
-	private StringTokenizer token;
 	private int preview;
-	private java_cup.runtime.Scanner lexer;
+	private Lexer lexer;
+	private boolean pop;
+	java_cup.runtime.Scanner currentLexer;
+	String token;
 	
+
 	public final Class getSymbolContainer() {
 		return sym.class;
 	}
-	
-	private void readFile(String fileName) {
-		Path path = Paths.get(fileName);
-		try {
-			byte[] bytes = Files.readAllBytes(path);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			allLines = Files.readAllLines(path, StandardCharsets.UTF_8);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-	}
+
 	/** Default constructor. */
 	@Deprecated
 	public parser() {super();}
 
 	/** Constructor which sets the default scanner. */
 	@Deprecated
-	public parser(java_cup.runtime.Scanner s,String fileName) {
+	public parser(java_cup.runtime.Scanner s,String fileName){
 		super(s);
-		lexer=s;
+		currentLexer=s;
 		
+		try {
+			lexer=new Lexer(new FileReader(fileName),fileName) ;
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	/** Constructor which sets the default scanner. */
@@ -624,6 +619,7 @@ public class parser extends java_cup.runtime.lr_parser {
 	{
 		action_obj = new CUP$parser$actions(this);
 		preview=0;
+		pop=true;
 	}
 
 	/** Invoke a user supplied parse action. */
@@ -658,7 +654,7 @@ public class parser extends java_cup.runtime.lr_parser {
        reason for the error which is passed into the method in the
        String 'message'. */
 	public void report_error(String message, Object info) {
-	
+
 		/* Create a StringBuilder called 'm' with the string 'Error' in it. */
 		StringBuilder m = new StringBuilder("Error");
 
@@ -691,7 +687,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 		/* Print the contents of the StringBuilder 'm', which contains
            an error message, out on a line. */
-		
+
 	}
 
 	/* Change the method report_fatal_error so when it reports a fatal
@@ -700,6 +696,22 @@ public class parser extends java_cup.runtime.lr_parser {
        fatal error which is passed into the method in the object
        'message' and then exit.*/
 	public void report_fatal_error(String message, Object info) {
+		
+		try {
+			String next = (String) currentLexer.next_token().value;
+			String previous= (String) lexer.next_token().value;
+				
+			while (previous !=null && !previous.equals(next)) {
+				System.out.print(previous);
+			    previous= (String) lexer.next_token().value;
+				if (previous==null || previous.equals(next)) 
+					break;
+				System.out.println(" [shift]");		
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		report_error(message, info);
 		System.out.println("\n[reject]");
 		System.exit(1);
@@ -719,8 +731,8 @@ public class parser extends java_cup.runtime.lr_parser {
 		CUP$parser$actions(parser parser) {
 			this.parser = parser;
 		}
-
 		
+
 		/** Method 0 with the actual generated action code for actions 0 to 300. */
 		public final java_cup.runtime.Symbol CUP$parser$do_action_part00000000(
 				int                        CUP$parser$act_num,
@@ -731,16 +743,31 @@ public class parser extends java_cup.runtime.lr_parser {
 		{
 			/* Symbol object for return from actions */
 			java_cup.runtime.Symbol CUP$parser$result;
-
-			for (int i=preview;i< CUP$parser$stack.size();i++) {
-				System.out.println("[shift]");
 			
+			String t="";
+			for (int i=preview;i< CUP$parser$stack.size() && parser.cur_token.value!=null;i++) {
+				if (pop) {
+					System.out.print(lexer.next_token().value);
+				}
+				System.out.println(" [shift]");
+				pop=true;
 			}
+
+
+			if (pop) {
+				token = (String)lexer.next_token().value;
+				if (token!=null)
+					System.out.print(token);
+				else
+					System.out.print("empty");
+				pop=false;
+			}
+
 			preview= CUP$parser$stack.size();
 			/* select the action based on the action number */
 			if (CUP$parser$act_num>0)
 				System.out.print(" [reduce "+CUP$parser$act_num+"]");
-			
+
 			switch (CUP$parser$act_num)
 			{
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -754,7 +781,7 @@ public class parser extends java_cup.runtime.lr_parser {
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("$START",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
 			/* ACCEPT */
-	
+
 			System.out.println("\n[Accept]");  
 			CUP$parser$parser.done_parsing();
 			return CUP$parser$result;
@@ -766,7 +793,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Program",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			
+
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -776,7 +803,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("P",1, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			
+
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -786,7 +813,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("P",1, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			
+
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -796,7 +823,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Decl",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-		
+
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -806,7 +833,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Decl",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			
+
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -816,7 +843,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Decl",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			
+
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -826,7 +853,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Decl",2, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			
+
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -836,7 +863,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("VariableDecl",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			
+
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -846,7 +873,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Variable",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			
+
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -856,7 +883,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Type",5, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
-			
+
 			return CUP$parser$result;
 
 			/*. . . . . . . . . . . . . . . . . . . .*/
@@ -1583,7 +1610,6 @@ public class parser extends java_cup.runtime.lr_parser {
 			case 91: // Call ::= _id _period _id _leftparen Actuals _rightparen 
 			{
 				Object RESULT =null;
-
 				CUP$parser$result = parser.getSymbolFactory().newSymbol("Call",29, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
 			}
 			return CUP$parser$result;
@@ -1657,7 +1683,7 @@ public class parser extends java_cup.runtime.lr_parser {
 						"Invalid action number "+CUP$parser$act_num+"found in internal parse table");
 
 			}
-			
+
 		} /* end of method */
 
 		/** Method splitting the generated action code into several parts. */

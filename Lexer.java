@@ -407,7 +407,7 @@ class Lexer implements java_cup.runtime.Scanner {
 	 * Closes the input stream.
 	 */
 	public final void yyclose() throws java.io.IOException {
-		zzAtEOF = true;            /* indicate end of file */
+		setZzAtEOF(true);            /* indicate end of file */
 		zzEndRead = zzStartRead;  /* invalidate buffer    */
 
 		if (zzReader != null)
@@ -430,7 +430,7 @@ class Lexer implements java_cup.runtime.Scanner {
 	public final void yyreset(java.io.Reader reader) {
 		zzReader = reader;
 		zzAtBOL  = true;
-		zzAtEOF  = false;
+		setZzAtEOF(false);
 		zzEOFDone = false;
 		zzEndRead = zzStartRead = 0;
 		zzCurrentPos = zzMarkedPos = 0;
@@ -645,7 +645,7 @@ class Lexer implements java_cup.runtime.Scanner {
 				boolean zzPeek;
 				if (zzMarkedPosL < zzEndReadL)
 					zzPeek = zzBufferL[zzMarkedPosL] == '\n';
-				else if (zzAtEOF)
+				else if (isZzAtEOF())
 					zzPeek = false;
 				else {
 					boolean eof = zzRefill();
@@ -679,7 +679,7 @@ class Lexer implements java_cup.runtime.Scanner {
 						zzInput = Character.codePointAt(zzBufferL, zzCurrentPosL, zzEndReadL);
 						zzCurrentPosL += Character.charCount(zzInput);
 					}
-					else if (zzAtEOF) {
+					else if (isZzAtEOF()) {
 						zzInput = YYEOF;
 						break zzForAction;
 					}
@@ -719,13 +719,14 @@ class Lexer implements java_cup.runtime.Scanner {
 			// store back cached position
 			zzMarkedPos = zzMarkedPosL;
 			if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
-				zzAtEOF = true;
-				zzDoEOF();
+				setZzAtEOF(true);
+				//zzDoEOF();
 				{ return new java_cup.runtime.Symbol(sym.EOF); }
 			}
 			else {
-				if (!yytext().equals(" ") && !yytext().equals("\n") && !yytext().equals("\t") )
+				/*if (!yytext().equals(" ") && !yytext().equals("\n") && !yytext().equals("\t") )
 					System.out.print(yytext()+" ");
+				*/
 				switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
 				case 1: 
 					//System.out.println("line: "+(yyline+1)+" "+"col: "+(yycolumn+1)+" "+"match: --"+zzToPrintable(yytext())+"--");
@@ -1098,8 +1099,7 @@ class Lexer implements java_cup.runtime.Scanner {
 			System.out.println("Usage : java Lexer [ --encoding <name> ] <inputfile(s)>");
 		}
 		else {
-			
-
+	
 			int firstFilePos = 0;
 			String encodingName = "UTF-8";
 			if (argv[0].equals("--encoding")) {
@@ -1121,7 +1121,7 @@ class Lexer implements java_cup.runtime.Scanner {
 					do {
 						//System.out.println(scanner.next_token());
 						scanner.next_token();
-					} while (!scanner.zzAtEOF);
+					} while (!scanner.isZzAtEOF());
 
 				}
 				catch (java.io.FileNotFoundException e) {
@@ -1137,6 +1137,14 @@ class Lexer implements java_cup.runtime.Scanner {
 				}
 			}
 		}
+	}
+
+	public boolean isZzAtEOF() {
+		return zzAtEOF;
+	}
+
+	public void setZzAtEOF(boolean zzAtEOF) {
+		this.zzAtEOF = zzAtEOF;
 	}
 
 
