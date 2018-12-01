@@ -1,4 +1,4 @@
-class something(){
+class something{
 boolean b;
 userDefinedClassType f(){}
 double d;

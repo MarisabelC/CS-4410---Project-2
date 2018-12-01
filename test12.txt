@@ -1,3 +1,6 @@
-public void main(){
-	String str = "this is a string";
+class OtherClass extends MyClass implements MyImplement{
+	string fun(){
+		while (2<i<6){double num;
+		} 
+	}
 }

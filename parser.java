@@ -700,6 +700,7 @@ public class parser extends java_cup.runtime.lr_parser {
 	private ArrayList<String> tokenList;
 	private List<List<String>> reduceShift;
 	private int currPos;
+	private boolean isEmpty;
 
 	/*constructor*/
 	public parser(java_cup.runtime.Scanner s,String fileName) {
@@ -833,7 +834,7 @@ public class parser extends java_cup.runtime.lr_parser {
 			/* Symbol object for return from actions */
 			java_cup.runtime.Symbol CUP$parser$result;
 
-			while (tokenList.size()!=1 &&!token.equals(parser.cur_token.value)) {
+			while (tokenList.size()>1 &&!token.equals(parser.cur_token.value)) {
 
 				if (pop) {
 					reduceShift.get(currPos).add(tokenList.remove(0));
@@ -843,10 +844,15 @@ public class parser extends java_cup.runtime.lr_parser {
 				token=tokenList.get(0);
 				currPos++;
 			}
-
+			if (!isEmpty && tokenList.size()==1 && parser.cur_token.value==null) {
+				reduceShift.get(currPos).add(" [shift]");
+				isEmpty=true;
+				pop=true;
+				currPos++;
+			}
 			if (pop) {
 
-				if (tokenList.size()!=1 ) {
+				if (!isEmpty) {
 					token=tokenList.remove(0);
 					reduceShift.get(currPos).add(token);
 				}
