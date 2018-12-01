@@ -1,11 +1,47 @@
 /* Import the class java_cup.runtime.*  */
 import java_cup.runtime.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
    
 /* Parser code to change the way the parser reports errors (include
    line and column number of the error). */
 parser code {:
     
-	public ArrayList<ArrayList> shiftReduce= new ArrayList<>();
+	private boolean pop;
+	java_cup.runtime.Scanner currentLexer;
+	private String token;
+	private ArrayList<String> tokenList;
+	private List<List<String>> reduceShift;
+	private int currPos;
+	
+	/*constructor*/
+	public parser(java_cup.runtime.Scanner s,String fileName) {
+		super(s);
+		currentLexer=s;
+		tokenList= new ArrayList<>();
+		reduceShift=new ArrayList<>();
+		currPos=0;
+		pop=true;
+		try {
+			Lexer lexer=new Lexer(new FileReader(fileName),fileName) ;
+			do {
+				tokenList.add((String) lexer.next_token().value);
+				reduceShift.add(new ArrayList<>());
+			} while (!lexer.isZzAtEOF());
+
+			token=tokenList.get(0);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 	
     /* Change the method report_error so it will display the line and
        column of where the error occurred in the input as well as the
@@ -45,7 +81,7 @@ parser code {:
    
         /* Print the contents of the StringBuilder 'm', which contains
            an error message, out on a line. */
-        System.err.println(m);
+        //System.err.println(m);
     }
    
     /* Change the method report_fatal_error so when it reports a fatal
@@ -54,16 +90,79 @@ parser code {:
        fatal error which is passed into the method in the object
        'message' and then exit.*/
     public void report_fatal_error(String message, Object info) {
-        report_error(message, info);
+        try {
+			String next = (String) currentLexer.next_token().value;
+			while (tokenList.size()!=1 && !tokenList.get(0).equals(next)) {
+				reduceShift.get(currPos).add(tokenList.remove(0));
+				if (tokenList.isEmpty() || tokenList.get(0).equals(next)) 
+					break;
+				reduceShift.get(currPos).add(" [shift]");
+				currPos++;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		print();
+		System.out.println("[reject]");
+		//report_error(message, info);
         System.exit(1);
     }
 	
-	private addAction(String Action, value){
-	
+	private void print() {
+		int size=reduceShift.size();
+		for (int i=0;i<size;i++) {
+			List<String> list=reduceShift.remove(0);
+			for (int j=0; j<list.size();j++)
+				if (j==0)
+					System.out.printf("%-30s",list.get(j));
+				else {
+					if (list.get(j).equals(" [shift]"))
+						System.out.println(list.get(j));
+					else
+						System.out.print(list.get(j));
+				}
+		}
 	}
+	
+	/*
+	============paste inside java_cup.runtime.Symbol CUP$parser$do_action_part00000000================
+	
+	while (tokenList.size()!=1 &&!token.equals(parser.cur_token.value)) {
+			
+				if (pop) {
+					reduceShift.get(currPos).add(tokenList.remove(0));
+				}
+				reduceShift.get(currPos).add(" [shift]");
+				pop=true;
+				token=tokenList.get(0);
+				currPos++;
+			}
+			
+			if (pop) {
+
+				if (tokenList.size()!=1 ) {
+					token=tokenList.remove(0);
+					reduceShift.get(currPos).add(token);
+				}
+				else
+					reduceShift.get(currPos).add("empty string");
+					pop=false;
+			}
+
+			/* select the action based on the action number */
+			if (CUP$parser$act_num>0)
+				reduceShift.get(currPos).add(" [reduce "+CUP$parser$act_num+"]");
+			//System.out.print(" [reduce "+CUP$parser$act_num+"]");
+			
+			
+			******************************accept*********************
+			print();
+          System.out.println("\n[Accept]");
+		  *************************************************************
+	======================================================================================*/		
 :};
    
-
    
 /* ------------Declaration of Terminals and Non Terminals Section----------- */
    
@@ -90,7 +189,7 @@ terminal Boolean   _booleanconstant,_boolean;
 
 nonterminal        Program,P,Decl,VariableDecl,Variable,Type, FunctionDecl,
                     Formals,Var,ClassDecl,Extends,Implement,Id,Field,InterfaceDecl,
-					Prototype,StmtBlock,D,Statement,Stmt,IfStmt,WhileStmt,ForStmt,
+					Prototype,StmtBlock,VarDecl,Statement,Stmt,IfStmt,WhileStmt,ForStmt,
 					BreakStmt, ReturnStmt, PrintStmt, Expression, Expr, Lvalue,Call,
 					Actuals,Constant;
     
@@ -115,102 +214,114 @@ nonterminal        Program,P,Decl,VariableDecl,Variable,Type, FunctionDecl,
    
 // The grammar for our parser.
       
-Program ::= Decl P;   
+Program ::= P;   
 P ::= Decl P
-	| ;//empty string
+| Decl ;
 Decl ::= VariableDecl 
-		| FunctionDecl 
-		| ClassDecl 
-		| InterfaceDecl;
+| FunctionDecl 
+| ClassDecl 
+| InterfaceDecl;
 VariableDecl ::= Variable _semicolon;
 Variable ::= Type _id;
 Type ::= _int 
-		| _double 
-		| _boolean 
-		| _string 
-		| Type _leftbracket _rightbracket 
-		| _id;
-FunctionDecl ::= Type _id _leftparen Formals _rightparen StmtBlock 
-				| _void _id _leftparen Formals _rightparen StmtBlock;
-Formals ::= Var 
-			| ; //empty string
+| _double 
+| _boolean 
+| _string 
+| Type _leftbracket _rightbracket 
+| _id;
+FunctionDecl ::= Type _id _leftparen Formals _rightparen StmtBlock
+|Type _id _leftparen  _rightparen StmtBlock
+|_void _id _leftparen  _rightparen StmtBlock 
+| _void _id _leftparen Formals _rightparen StmtBlock;
+Formals ::= Var;
 Var ::= Variable _comma Var
-	  | Variable;
-ClassDecl ::= _class _id Extends Implement _leftbrace Field _rightbrace;
-Extends ::= _extends _id
-		  | ; //empty string 
-Implement ::= _implements _id
-			| _implements Id
-			| ;//empty string
-Id ::= _id _comma Id _id
-	|; //empty string
+| Variable;
+ClassDecl ::= _class _id Extends Implement _leftbrace  _rightbrace
+|_class _id Implement _leftbrace  _rightbrace
+|_class _id Implement _leftbrace Field _rightbrace
+| _class _id Extends  _leftbrace Field _rightbrace
+| _class _id Extends _leftbrace  _rightbrace
+| _class _id  _leftbrace Field _rightbrace
+| _class _id  _leftbrace  _rightbrace
+| _class _id Extends Implement _leftbrace Field _rightbrace;
+Extends ::= _extends _id;
+Implement ::= _implements Id;
+Id ::= Id _comma _id
+|_id;
 Field ::= VariableDecl Field 
-		| FunctionDecl Field
-		|; //empty string
+| FunctionDecl Field
+| VariableDecl
+|FunctionDecl ;
 InterfaceDecl ::= _interface _id _leftbrace Prototype _rightbrace
-				| _interface _id _leftbrace _rightbrace;
+| _interface _id _leftbrace _rightbrace;
 Prototype ::= Type _id _leftparen Formals _rightparen _semicolon 
-			| _void _id _leftparen Formals _rightparen _semicolon;
-StmtBlock ::= _leftbrace VarDecl Statement _rightbrace;
-VarDecl ::= VariableDecl VarDecl
-   |; //empty string
+| _void _id _leftparen Formals _rightparen _semicolon
+| Type _id _leftparen Formals _rightparen _semicolon Prototype
+| _void _id _leftparen Formals _rightparen _semicolon Prototype;
+StmtBlock ::= _leftbrace Statement _rightbrace
+| _leftbrace VarDecl  _rightbrace
+| _leftbrace  _rightbrace
+| _leftbrace VarDecl Statement _rightbrace;
+VarDecl ::= VarDecl VariableDecl 
+|VariableDecl; 
 Statement ::= Stmt Statement
-		    | ;//empty string
+| Stmt;
 Stmt ::= Expr _semicolon
-	   | _semicolon 
-	   | IfStmt 
-	   | WhileStmt 
-	   | ForStmt 
-	   | BreakStmt 
-	   | ReturnStmt 
-	   | PrintStmt 
-	   | StmtBlock;
+| _semicolon 
+| IfStmt 
+| WhileStmt 
+| ForStmt 
+| BreakStmt 
+| ReturnStmt 
+| PrintStmt 
+| StmtBlock;
 IfStmt ::= _if _leftparen Expr _rightparen Stmt _else Stmt
-         | _if _leftparen Expr _rightparen Stmt;
+| _if _leftparen Expr _rightparen Stmt;
 WhileStmt ::= _while _leftparen Expr _rightparen Stmt;
 ForStmt ::= _for _leftparen Expr _semicolon Expr _semicolon Expr _rightparen Stmt
-	      | _for _leftparen _semicolon Expr _semicolon Expr _rightparen Stmt
-          | _for _leftparen _semicolon Expr _semicolon _rightparen Stmt
-          | _for _leftparen Expr _semicolon Expr _semicolon _rightparen Stmt;
+| _for _leftparen _semicolon Expr _semicolon Expr _rightparen Stmt
+| _for _leftparen _semicolon Expr _semicolon _rightparen Stmt
+| _for _leftparen Expr _semicolon Expr _semicolon _rightparen Stmt;
 BreakStmt ::= _break _semicolon;
 ReturnStmt ::= _return Expr _semicolon
-	         | _return _semicolon;
-PrintStmt ::= _println _leftparen Expr Expression _rightparen _semicolon;
-Expression ::= _comma Expr Expression 
-			 | ; //empty string
-Expr ::= _id Lvalue _assignop Expr 
-	   | Constant 
-	   | _id Lvalue 
-	   | Call 
-	   | _leftparen Expr _rightparen  
-	   | Expr _plus Expr 
-	   | Expr _minus Expr
-	   | Expr _multiplication Expr
-	   | Expr _division Expr 
-	   | Expr _mod Expr 
-	   | _minus Expr
-                        %prec _uminus	   
-	   | Expr _less Expr 
-	   | Expr _lessequal Expr  
-	   | Expr _greater Expr 
-	   | Expr _greaterequal Expr
-	   | Expr _equal Expr 
-	   | Expr _notequal Expr 
-	   | Expr _and Expr 
-	   | Expr _or Expr 
-	   | _not Expr
-	   | _readln _leftparen _rightparen 
-	   | _new _leftparen _id _rightparen 
-	   | _newarray _leftparen _intconstant _comma Type _rightparen;
-Lvalue ::= //empty string 
-		 | Lvalue _leftbracket Expr _rightbracket 
-	     | Lvalue _period _id;
+| _return _semicolon;
+PrintStmt ::= _println _leftparen Expression _rightparen _semicolon;
+Expression ::= Expression _comma Expr 
+| Expr; 
+Expr ::=  Lvalue _assignop Expr 
+| Constant 
+| Lvalue 
+| Call 
+| _leftparen Expr _rightparen  
+| Expr _plus Expr 
+| Expr _minus Expr
+| Expr _multiplication Expr
+| Expr _division Expr
+| Expr _mod Expr 
+| _minus Expr
+| Expr _less Expr
+| Expr _lessequal Expr 
+| Expr _greater Expr
+| Expr _greaterequal Expr 
+| Expr _equal Expr 
+| Expr _notequal Expr 
+| Expr _and Expr
+| Expr _or Expr  
+| _not Expr 
+| _readln _leftparen _rightparen 
+| _new _leftparen _id _rightparen 
+| _newarray _leftparen _intconstant _comma Type _rightparen;
+Lvalue ::= _id
+| Lvalue _leftbracket Expr _rightbracket 
+| Lvalue _period _id;
 Call ::= _id _leftparen Actuals _rightparen 
-	   | _id _period _id _leftparen Actuals _rightparen;
-Actuals ::= Expr Expression
-	      | ; //empty string
+| _id _leftparen  _rightparen 
+|_id _period _id _leftparen  _rightparen
+| _id _period _id _leftparen Actuals _rightparen;
+Actuals ::= Expression;
 Constant ::= _intconstant 
-		   | _doubleconstant 
-		   | _stringconstant 
-	       | _booleanconstant 
-		   | _null;
+| _doubleconstant 
+| _stringconstant 
+| _booleanconstant 
+| _null;
+
