@@ -1,6 +1,0 @@
-public void main(){
-	int y = 1;
-	for(int x = 0; x < 2; x++){
-	y++;
-	}
-}
