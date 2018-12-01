@@ -1,0 +1,3 @@
+public void main(){
+	String str = "this is a string";
+}

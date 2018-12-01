@@ -1,0 +1,4 @@
+class toy implements subClass{
+	void fun(){
+	}
+}
