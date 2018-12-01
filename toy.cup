@@ -155,11 +155,10 @@ parser code {:
 				reduceShift.get(currPos).add(" [reduce "+CUP$parser$act_num+"]");
 			//System.out.print(" [reduce "+CUP$parser$act_num+"]");
 			
-			
-			******************************accept*********************
+			/*===================accept=========================
 			print();
-          System.out.println("\n[Accept]");
-		  *************************************************************
+			System.out.println("\n[Accept]");
+			
 	======================================================================================*/		
 :};
    
@@ -187,7 +186,7 @@ terminal Boolean   _booleanconstant,_boolean;
    
 // Non terminals used in the grammar section.  
 
-nonterminal        Program,P,Decl,VariableDecl,Variable,Type, FunctionDecl,
+nonterminal        Program,P,Decl,VariableDecl,Variable,Type,Type1, FunctionDecl,
                     Formals,Var,ClassDecl,Extends,Implement,Id,Field,InterfaceDecl,
 					Prototype,StmtBlock,VarDecl,Statement,Stmt,IfStmt,WhileStmt,ForStmt,
 					BreakStmt, ReturnStmt, PrintStmt, Expression, Expr, Lvalue,Call,
@@ -214,7 +213,8 @@ nonterminal        Program,P,Decl,VariableDecl,Variable,Type, FunctionDecl,
    
 // The grammar for our parser.
       
-Program ::= P;   
+Program ::= P{:print();
+          System.out.println("\n[Accept]");:};   
 P ::= Decl P
 | Decl ;
 Decl ::= VariableDecl 
@@ -223,12 +223,13 @@ Decl ::= VariableDecl
 | InterfaceDecl;
 VariableDecl ::= Variable _semicolon;
 Variable ::= Type _id;
-Type ::= _int 
-| _double 
-| _boolean 
-| _string 
-| Type _leftbracket _rightbracket 
-| _id;
+Type ::= _int Type1
+| _double Type1
+| _boolean Type1
+| _string Type1  
+| _id Type1;
+Type1 ::=_leftbracket _rightbracket Type1
+|;//empty string
 FunctionDecl ::= Type _id _leftparen Formals _rightparen StmtBlock
 |Type _id _leftparen  _rightparen StmtBlock
 |_void _id _leftparen  _rightparen StmtBlock 
@@ -298,7 +299,8 @@ Expr ::=  Lvalue _assignop Expr
 | Expr _multiplication Expr
 | Expr _division Expr
 | Expr _mod Expr 
-| _minus Expr
+| _minus Expr 
+%prec _uminus
 | Expr _less Expr
 | Expr _lessequal Expr 
 | Expr _greater Expr
